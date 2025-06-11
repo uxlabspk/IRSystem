@@ -15,10 +15,25 @@ public class InvertedIndexLoader {
     private final Map<String, Set<Integer>> invertedIndex = new HashMap<>();
 
     public InvertedIndexLoader() throws IOException {
-        loadIndex();
-    }
-    public void loadIndex() throws IOException {
         Path path = Paths.get("src/main/resources/inverted_index.txt");
+
+        if (Files.exists(path)) {
+            loadIndex(path);
+        } else {
+            // first convert the pdfs into txt format
+            var pdfToTextConverter = new PDFToTextConverter();
+            pdfToTextConverter.convertPdf();
+
+            // second generate the inverted index file
+            var invertedIndexBuilder = new InvertedIndexBuilder();
+            invertedIndexBuilder.indexDirectory("output");
+            invertedIndexBuilder.saveInvertedIndex("src/main/resources/inverted_index.txt");
+
+            loadIndex(path);
+        }
+    }
+
+    public void loadIndex(Path path) throws IOException {
         List<String> lines = Files.readAllLines(path);
         for (String line : lines) {
             String[] parts = line.split(":");

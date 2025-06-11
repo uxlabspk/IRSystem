@@ -32,4 +32,7 @@ build/
 ### VS Code ###
 .vscode/
 
-src/main/resources/static/pdfs
+### Project Settings ###
+/pdfs/*
+/output/*
+/src/main/resources/inverted_index.txt
